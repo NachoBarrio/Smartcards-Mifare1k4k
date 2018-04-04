@@ -34,18 +34,9 @@ var usuarioConcat = new ByteString(codFechaDia+codFechaMes+codFechaAnio+
 codHora+codMin+codTrans, HEX);
 var usuarioConcatRelleno = usuarioConcat.pad(Crypto.ISO9797_METHOD_2, true);
 var usuarioConcatCifrado = crypto.encrypt(deskey, Crypto.DES_CBC, usuarioConcatRelleno, VI);
-var MAC = usuarioConcatCifrado.right(8).left(4);
-print("pintar mac: "+MAC);
+var MACusuario = usuarioConcatCifrado.right(8).left(4);
+print("pintar mac: "+MACusuario);
 
-//Sector mac bloque 4 sector 1
-
-//SE AUTENTICA CON EL BLOQUE 4 del SECTOR 1
-
-resp = card.plainApdu(new ByteString("FF 86 00 00 05 01 00 04 60 00", HEX));
-//print("Código SW: " + card.SW.toString(16));
-
-//ESCRITURA DEL BLOQUE 4
-resp = card.plainApdu(new ByteString("FF D6 00 04 10 DD 04 DC 04 DF 04 DD 04 DC 04 DF 04"+MAC,HEX)); 
 
 //SE AUTENTICA CON EL BLOQUE 8 del SECTOR 2
 //
@@ -57,18 +48,29 @@ print("Código SW: " + card.SW.toString(16));
 
 //Sector monedero bloque 9 sector 2
 var codEmisor = "C0 D0";
-var valorInicial = "00 08"  //8 porque es igual a 10 viajes
+var valorMonedero = "00 08"  //8 porque es igual a 10 viajes
 var valorMax = "3A 98" ; //15000
 var codPago = "00 01";
-var monederoConcat = new ByteString(codEmisor+valorInicial+valorMax+codPago, HEX);
+var monederoConcat = new ByteString(codEmisor+valorMonedero+valorMax+codPago, HEX);
 var monederoConcatRelleno = monederoConcat.pad(Crypto.ISO9797_METHOD_2, true);
-var monederoConcatRelleno = crypto.encrypt(deskey, Crypto.DES_CBC, monederoConcatRelleno, VI);
+var monederoConcatCifrado = crypto.encrypt(deskey, Crypto.DES_CBC, monederoConcatRelleno, VI);
+var MACmonedero = monederoConcatCifrado.right(8).left(4);
+print("pintar mac 2: "+MACmonedero);
 //SE AUTENTICA CON EL BLOQUE 9 del SECTOR 2
 //
 resp = card.plainApdu(new ByteString("FF 86 00 00 05 01 00 09 60 00", HEX));
 print("Código SW: " + card.SW.toString(16));
 //Escribe los datos personales en el sector 2 bloque 9 rellenando el bloque
-resp = card.plainApdu(new ByteString("FF D6 00 09 10", HEX).concat(monederoConcatRelleno).concat(completar));
+resp = card.plainApdu(new ByteString("FF D6 00 09 10", HEX).concat(monederoConcatCifrado).concat(completar));
 print("Código SW: " + card.SW.toString(16));
 
+//Sector mac bloque 4 sector 1
+
+//SE AUTENTICA CON EL BLOQUE 4 del SECTOR 1
+
+resp = card.plainApdu(new ByteString("FF 86 00 00 05 01 00 04 60 00", HEX));
+//print("Código SW: " + card.SW.toString(16));
+
+//ESCRITURA DEL BLOQUE 4
+resp = card.plainApdu(new ByteString("FF D6 00 04 10 DD 04 DC 04 DF 04 DD 04"+MACusuario+MACmonedero,HEX)); 
 
