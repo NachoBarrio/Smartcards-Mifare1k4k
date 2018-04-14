@@ -48,3 +48,7 @@ var monederoConcatRelleno = descifrado.pad(Crypto.ISO9797_METHOD_2, true);
 var monederoConcatCifrado = crypto.encrypt(deskey, Crypto.DES_CBC, monederoConcatRelleno, VI);
 var MAC = monederoConcatCifrado.right(8).left(4);
 print("MAC comparada con MACc "+MAC+"<---->"+MACc);
+
+//Mostrar valor monedero
+var dinero = descifrado.bytes(2,2).toSigned();
+print("Valor actual del monedero: "+dinero.toString());
