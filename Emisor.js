@@ -48,6 +48,9 @@ var valorMonedero = "00 00 03 20"  //8 porque es igual a 10 viajes
 var valorMax = "3A 98" ; //15000
 print("cambiar a hex: "+new ByteString(valorMax,ASCII).toHex());
 var codPago = "00";
+var contViajesEscritos = new ByteString("00",HEX);
+
+
 var monederoConcat = new ByteString(codEmisor+valorMonedero+valorMax+codPago, HEX);
 var monederoConcatRelleno = monederoConcat.pad(Crypto.ISO9797_METHOD_2, true);
 var monederoConcatCifrado = crypto.encrypt(deskey, Crypto.DES_CBC, monederoConcatRelleno, VI);
@@ -58,7 +61,8 @@ print("pintar mac 2: "+MACmonedero);
 resp = card.plainApdu(new ByteString("FF 86 00 00 05 01 00 09 60 00", HEX));
 print("Código SW: " + card.SW.toString(16));
 //Escribe los datos personales en el sector 2 bloque 9 rellenando el bloque
-resp = card.plainApdu(new ByteString("FF D6 00 09 10", HEX).concat(monederoConcatCifrado).concat(completar));
+resp = card.plainApdu(new ByteString("FF D6 00 09 10", HEX).concat(monederoConcatCifrado)
+.concat(contViajesEscritos).concat(completar.bytes(0,7)));
 print("Código SW: " + card.SW.toString(16));
 
 
