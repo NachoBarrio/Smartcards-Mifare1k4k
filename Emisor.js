@@ -43,10 +43,11 @@ resp = card.plainApdu(new ByteString("FF D6 00 08 10", HEX).concat(usuarioConcat
 print("Código SW: " + card.SW.toString(16));
 
 //Sector monedero bloque 9 sector 2
-var codEmisor = "C0 D0";
-var valorMonedero = "00 08"  //8 porque es igual a 10 viajes
+var codEmisor = "C0";
+var valorMonedero = "00 00 03 20"  //8 porque es igual a 10 viajes
 var valorMax = "3A 98" ; //15000
-var codPago = "00 01";
+print("cambiar a hex: "+new ByteString(valorMax,ASCII).toHex());
+var codPago = "00";
 var monederoConcat = new ByteString(codEmisor+valorMonedero+valorMax+codPago, HEX);
 var monederoConcatRelleno = monederoConcat.pad(Crypto.ISO9797_METHOD_2, true);
 var monederoConcatCifrado = crypto.encrypt(deskey, Crypto.DES_CBC, monederoConcatRelleno, VI);
@@ -60,7 +61,7 @@ print("Código SW: " + card.SW.toString(16));
 resp = card.plainApdu(new ByteString("FF D6 00 09 10", HEX).concat(monederoConcatCifrado).concat(completar));
 print("Código SW: " + card.SW.toString(16));
 
-//Sector mac bloque 4 sector 1
+
 
 //SE AUTENTICA CON EL BLOQUE 4 del SECTOR 1
 

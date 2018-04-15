@@ -50,5 +50,5 @@ var MAC = monederoConcatCifrado.right(8).left(4);
 print("MAC comparada con MACc "+MAC+"<---->"+MACc);
 
 //Mostrar valor monedero
-var dinero = descifrado.bytes(2,2).toSigned();
+var dinero = descifrado.bytes(1,4);
 print("Valor actual del monedero: "+dinero.toString());
