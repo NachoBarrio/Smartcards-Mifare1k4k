@@ -41,7 +41,7 @@ while (tarjeta.length < 30){
 var TLVC2 = new ByteString(HC2 + LC2 + tarjeta,HEX);
 print("prueba TLVC2: "+TLVC2);
 //fecha reserva 1 sector
-var fecha = new ByteString("0418",ASCII);
+var fecha = new ByteString("0419",ASCII);
 
 var HC3 = "C3";
 var LC3 = (fecha.length).toString(16);
