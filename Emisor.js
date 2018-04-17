@@ -75,3 +75,4 @@ resp = card.plainApdu(new ByteString("FF 86 00 00 05 01 00 04 60 00", HEX));
 //ESCRITURA DEL BLOQUE 4
 resp = card.plainApdu(new ByteString("FF D6 00 04 10 DD 04 DC 04 DF 04 DD 04 DE 04 DF 04"+MACmonedero,HEX)); 
 
+card.close();

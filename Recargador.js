@@ -84,3 +84,4 @@ if( (dinero.toSigned() + recarga) > valorMaximo.toSigned()){
 	resp = card.plainApdu(new ByteString("FF D6 00 09 10", HEX).concat(monederoConcatCifrado).concat(numViajesEscritos).concat(completar.bytes(0,7)));
 	print("Código SW: " + card.SW.toString(16));
 }
+card.close();

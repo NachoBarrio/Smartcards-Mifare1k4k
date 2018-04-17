@@ -62,6 +62,7 @@ var valorMaximo = descifrado.bytes(5,2);
 print("Valor actual del monedero: "+dinero.toSigned());
 
 //Comprobar y registrar viaje
+// Array con sectores donde se guardarán los registros
 var bloquesRegistro = ["0C","0D","0E","10","11","12","13","14"];
 var costeViaje = 80;
 if( (dinero.toSigned() - costeViaje) < 0){
@@ -117,8 +118,8 @@ if( (dinero.toSigned() - costeViaje) < 0){
     print("date:"+ahora);
 	var codFechaDia = addZero(ahora.getDate());
 	var codFechaMes = addZero(ahora.getMonth());
-	var codFechaAnio = ahora.getFullYear()
-	var codHora = addZero(ahora.getHours());;
+	var codFechaAnio = ahora.getFullYear();
+	var codHora = addZero(ahora.getHours());
 	var codMin = addZero(ahora.getMinutes());
 	var codLinea = "00 01";
 	var codParada = "00 01";
@@ -129,3 +130,4 @@ if( (dinero.toSigned() - costeViaje) < 0){
 	resp = card.plainApdu(new ByteString("FF D6 00"+ sector +"10", HEX).concat(registroConcat).concat(completarSector));
 	print("Código SW: " + card.SW.toString(16));
 }
+card.close();
